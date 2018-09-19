@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+    <title>登陆页1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="../../common/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css">
+</head>
+<body>
+    <div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';color:#000000">
+        <h1>数据管理系统1</h1>
+    </div>
+
+    <div class="htmleaf-container">
+        <div class="wrapper">
+            <div class="container">
+                <h1 id="info">Welcome</h1>
+
+                <form class="form">
+                    <input type="text" placeholder="Username">
+                    <input type="password" placeholder="Password">
+                    <button type="submit" id="login-button">Login</button>
+                </form>
+            </div>
+
+            <ul class="bg-bubbles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+
+    <!--#include virtual="../../common/html/js.shtml" -->
+    <script type="text/javascript">
+        $(function () {
+            $.ajaxDirect({
+                url:'checkCookie',
+                afterFn: function(data){
+                    if (data.code == 'login')
+                        window.location.href = "success1.html";
+                }
+            })
+
+            $(document).on('click','#login-button',function(){
+                event.preventDefault();
+                $('form').fadeOut(500);
+                $('.wrapper').addClass('form-success');
+
+                var username = $("input[type=text]").val();
+                var password = $("input[type=password]").val();
+
+                $.ajaxDirect({
+                    url:'sso',
+                    param: "username="+username+"&password="+password,
+                    afterFn: function(data){
+                        if (data.code == '-1')
+                            $('#info').html(data.result);
+                        else
+                            window.location.href = "success1.html";
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>

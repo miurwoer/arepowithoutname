@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <title>xss</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="xss.css"/>
+</head>
+<body>
+    <h1>welcome</h1>
+    <textarea class="area"></textarea>
+    <button class="commit">提交</button>
+    <p class="comment"></p>
+
+    <script type="text/javascript" src="../common/js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="domParse.js"></script>
+    <script type="text/javascript" src="encode.js"></script>
+    <script>
+        var web_root = window.location.pathname.split("/")[1];
+        var address = "../../"+web_root+"/server";
+        var str = '<div id="div"></div>';
+        function parse(str){
+            var results = "";
+            try {
+                HTMLParser(he.unescape(str,{strict:true}),{
+                    start:function(tag,attrs,unary){
+                        if (tag == "img" || tag=="script" || tag == "iframe" || tag=='frame' || tag == "link" || tag=="style")
+                            return "";
+                        results += '<'+tag;
+                        /*for (var i=0;i<attrs.length;i++) {
+                            if (attrs[i].name == 'onerror') {
+                                results = "";
+                                return results;
+                            }
+                            results += " " + attrs[i].name;
+                            results += "=";
+                            results += '"'+attrs[i].escaped+'" ';
+                        }*/
+                        if (unary)
+                            results += "/>";
+                        else
+                            results += ">";
+                    },
+                    end:function(tag){
+                        results += "</"+tag+">";
+                    },
+                    chars:function(text){
+                        results += text;
+                    },
+                    comment:function(text){
+                        results += "<!-- "+text+" -->";
+                    }
+                })
+                return results;
+            } catch (e) {
+                console.log(e);
+            } finally {
+
+            }
+        }
+
+        $(document).on('click','.commit',function(){
+            var xss23 = '<img src="null" alt="" onerror="alert(1)" />';
+            var commit = $(".area").val();
+            $.ajax({
+                url: "../../boot/server/xss",
+                data: {xss:commit},
+                async: true,
+                contentType: "application/x-www-form-urlencoded",
+                success:function(data){
+                    if (data.code == 1){
+                        var filter = parse(data.result);
+                        $(".comment").html(filter);
+                    } else {
+                        alert("提交失败");
+                    }
+                }
+            })
+        });
+
+    </script>
+</body>
+</html>

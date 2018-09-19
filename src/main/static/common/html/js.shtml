@@ -1,0 +1,5 @@
+<script type="text/javascript" src="../../common/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../common/js/des.js"></script>
+<script type="text/javascript" src="../../common/js/ajax-jquery-plugin.js"></script>
+<script type="text/javascript" src="../../common/js/ics-ajax-config.js"></script>
+<script type="text/javascript" src="../../common/js/template.js"></script>
